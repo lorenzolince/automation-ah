@@ -1,0 +1,94 @@
+version: "3.6"
+services:
+  chrome:
+    image: selenium/node-chrome:beta
+    shm_size: 2gb
+    depends_on:
+      - selenium-hub
+    ports:
+      - "5900:5900"
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_SESSIONS=1
+      - VNC_NO_PASSWORD=1
+
+  edge:
+    image: selenium/node-edge:beta
+    shm_size: 2gb
+    depends_on:
+      - selenium-hub
+    ports:
+      - "5901:5900"
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_SESSIONS=1
+      - VNC_NO_PASSWORD=1
+
+  firefox:
+    image: selenium/node-firefox:beta
+    shm_size: 2gb
+    depends_on:
+      - selenium-hub
+    ports:
+      - "5902:5900"
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_SESSIONS=1
+      - VNC_NO_PASSWORD=1
+
+  chrome_video:
+    image: selenium/video:ffmpeg-4.3.1-20221219
+    volumes:
+      - ./tmp/videos:/videos
+    depends_on:
+      - chrome
+    environment:
+      - DISPLAY_CONTAINER_NAME=chrome
+      - FILE_NAME=chrome_video.mp4
+
+  edge_video:
+    image: selenium/video:ffmpeg-4.3.1-20221219
+    volumes:
+      - ./tmp/videos:/videos
+    depends_on:
+      - edge
+    environment:
+      - DISPLAY_CONTAINER_NAME=edge
+      - FILE_NAME=edge_video.mp4
+
+  firefox_video:
+    image: selenium/video:ffmpeg-4.3.1-20221219
+    volumes:
+      - ./tmp/videos:/videos
+    depends_on:
+      - firefox
+    environment:
+      - DISPLAY_CONTAINER_NAME=firefox
+      - FILE_NAME=firefox_video.mp4
+      
+  selenium-hub:
+    image: selenium/hub:latest
+    container_name: selenium-hub
+    hostname: selenium-hub
+    ports:
+      - "4442:4442"
+      - "4443:4443"
+      - "4444:4444"
+ 
+  automation-ah:
+    image: automation-ah
+    container_name: automation-ah
+    hostname: automation-ah
+    ports:
+     - "8080:8080"
+     - "8790:8790"
+    environment:
+     - API_JAVA_OPTION=-Xmx1024m -Xss1024m -Dlogging.level.org.springframework=ERROR -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8790,suspend=n
+    links:
+     - selenium-hub
