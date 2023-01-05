@@ -5,8 +5,10 @@
  */
 package com.chubb.automation.ah.controller;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import java.net.URL;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
@@ -28,7 +30,24 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
 
     private Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+   @RequestMapping(value = "/test1", method = RequestMethod.POST)
+    public void test1() {
+        LOGGER.info("INIT TEST 1");
+        try {
+            WebDriver driver;
+            WebDriverManager.chromedriver().version("108").setup();
+            driver = new ChromeDriver();
+            driver.get("https://google.com");
+            String title = driver.getTitle();
+            System.out.println(title);
+            Thread.sleep(3000);
+            driver.quit();
+        } catch (Exception e) {
+            System.out.println("############ Exception ##########");
+            System.out.println(e.getMessage());
+        }
 
+    }
     @RequestMapping(value = "/testChrome", method = RequestMethod.POST)
     public void testChrome() {
         LOGGER.info("INIT TEST 1");
