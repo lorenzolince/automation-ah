@@ -35,7 +35,7 @@ public class SwaggerConfig {
 
     private ApiInfo getApiInfo() {
         return new ApiInfo("Api Chobb",
-                "Test aut0mation for chobb",
+                "Test automation for chubb",
                 "1.0",
                 "https://www.logicstudio.net/",
                 new Contact("Lorenzo Lince", "https://www.linkedin.com/in/lorenzo-lince", "lorenzolince@gmail.com"),

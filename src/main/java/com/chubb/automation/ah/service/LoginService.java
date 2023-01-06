@@ -9,6 +9,10 @@ package com.chubb.automation.ah.service;
  * @author lorenzolince
  */
 public interface LoginService {
-   
-   public void senLogin();
+
+    public void navigateToChubb() throws InterruptedException;
+
+    public void enterUsernamePassword() throws InterruptedException;
+    
+    public boolean openSalesMenu() throws InterruptedException;
 }

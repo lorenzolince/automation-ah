@@ -2,12 +2,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.chubb.automation.ah.service.test;
+package com.chubb.automation.ah.test.steps;
 
 import com.chubb.automation.ah.service.LoginService;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,19 +24,18 @@ public class LoginCucumberStepTest {
     @Autowired
     private LoginService loginService;
 
-    @Given("^the bag is empty$")
-    public void the_bag_is_empty() {
-        LOGGER.info("################ Given ############");
+    @Given ("^The user access the Chubb sales portal$")
+    public void navigateToChubb() throws InterruptedException {
+        loginService.navigateToChubb();
     }
 
-    @When("^I put 1 potato in the bag$")
-    public void i_put_something_in_the_bag() {
-        LOGGER.info("################ When ############");
+    @When ("^the user enter a valid username and password$")
+    public void enterUsernamePassword() throws InterruptedException {
+       loginService.enterUsernamePassword();
     }
 
-    @Then("^the bag should contain only 1 potato$")
-    public void the_bag_should_contain_only_something() {
-        LOGGER.info("################ Then ############");
-        loginService.senLogin();
+    @Then ("^the user can see the Chubb sales menu$")
+    public void openSalesMenu() throws InterruptedException {
+        Assert.assertTrue("No se muestra el enlace Weblink", loginService.openSalesMenu());
     }
 }

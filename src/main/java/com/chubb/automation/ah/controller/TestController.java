@@ -5,16 +5,16 @@
  */
 package com.chubb.automation.ah.controller;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
+import com.chubb.automation.ah.service.LoginService;
 import java.net.URL;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,24 +30,23 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
 
     private Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-   @RequestMapping(value = "/test1", method = RequestMethod.POST)
+    @Autowired
+    private LoginService loginService;
+
+    @RequestMapping(value = "/test1", method = RequestMethod.POST)
     public void test1() {
         LOGGER.info("INIT TEST 1");
         try {
-            WebDriver driver;
-            WebDriverManager.chromedriver().version("108").setup();
-            driver = new ChromeDriver();
-            driver.get("https://google.com");
-            String title = driver.getTitle();
-            System.out.println(title);
-            Thread.sleep(3000);
-            driver.quit();
+          loginService.navigateToChubb();
+          loginService.enterUsernamePassword();
+          LOGGER.info("Result {} ",loginService.openSalesMenu());
         } catch (Exception e) {
-            System.out.println("############ Exception ##########");
-            System.out.println(e.getMessage());
+            LOGGER.error("_____________ Exception ________________");
+            LOGGER.error("Error {}",e);
         }
 
     }
+
     @RequestMapping(value = "/testChrome", method = RequestMethod.POST)
     public void testChrome() {
         LOGGER.info("INIT TEST 1");
@@ -59,9 +58,9 @@ public class TestController {
             chromeOptions.setCapability("se:noVncPort", "7900");
             chromeOptions.setCapability("se:vncEnabled", "true");
             WebDriver driver = new RemoteWebDriver(new URL("http://selenium-hub:4444"), chromeOptions);
-            driver.get("http://www.google.com");
-            Thread.sleep(10000);
-            driver.quit();
+            driver.get("http://www.google.com"); 
+           // Thread.sleep(10000);
+           // driver.quit();
 
         } catch (Exception e) {
             System.out.println("############ Exception ##########");
